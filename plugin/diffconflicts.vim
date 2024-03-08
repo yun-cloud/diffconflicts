@@ -64,45 +64,17 @@ function! s:diffconfl()
 endfunction
 
 function! s:showHistory()
-    " Create the tab and windows.
+    " 1: working, 2: base, 3: local, 4: remote
+    let l:base_filename = bufname(2)
+    let l:local_filename = bufname(3)
+    let l:remote_filename = bufname(4)
+    echo l:base_filename
+
     tabnew
-    vsplit
-    vsplit
-    wincmd h
-    wincmd h
+    execute printf("terminal git diff --no-index %s %s", l:base_filename, l:local_filename)
 
-    " Populate each window.
-    if g:diffconflicts_vcs == "hg"
-        buffer ~local.
-        file LOCAL
-    else
-        buffer LOCAL
-    endif
-    setlocal nomodifiable readonly
-    diffthis
-
-    wincmd l
-    if g:diffconflicts_vcs == "hg"
-        buffer ~base.
-        file BASE
-    else
-        buffer BASE
-    endif
-    setlocal nomodifiable readonly
-    diffthis
-
-    wincmd l
-    if g:diffconflicts_vcs == "hg"
-        buffer ~other.
-        file OTHER
-    else
-        buffer REMOTE
-    endif
-    setlocal nomodifiable readonly
-    diffthis
-
-    " Put cursor in back in BASE.
-    wincmd h
+    tabnew
+    execute printf("terminal git diff --no-index %s %s", l:base_filename, l:remote_filename)
 endfunction
 
 function! s:checkThenShowHistory()

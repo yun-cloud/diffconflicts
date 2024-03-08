@@ -1,3 +1,27 @@
+## Fork modification note
+
+change s:showHistory() behavior
+- originally, s:showHistory() open a new tab with 3-way diff
+- now, s:showHistory creates two tab
+    1. diff BASE LOCAL
+    2. diff BASE REMOTE
+
+note that the diff is
+`terminal git diff --no-index $BASE $LOCAL`
+
+as such, it relies on neovim `:terminal` feature
+
+and the `git diff` output will based your `~/.gitconfig`
+
+For example, I'm using [dandavison/delta: A syntax-highlighting pager for git, diff, and grep output](https://github.com/dandavison/delta)
+
+TODO:
+- [ ] check `:terminal` is supported, otherwise fallback to other native diff method
+
+the rational is 3 way diff is hard to figure out the difference
+and utilize the power of delta (color output, word-level diff, etc)
+
+___
 # vim-diffconflicts
 
 A better Vimdiff mergetool.
